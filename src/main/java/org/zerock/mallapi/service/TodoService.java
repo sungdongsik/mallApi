@@ -1,6 +1,8 @@
 package org.zerock.mallapi.service;
 
 import jakarta.transaction.Transactional;
+import org.zerock.mallapi.dto.PageRequestDTO;
+import org.zerock.mallapi.dto.PageResponseDTO;
 import org.zerock.mallapi.dto.TodoDto;
 import org.zerock.mallapi.entity.Todo;
 @Transactional
@@ -12,6 +14,8 @@ public interface TodoService {
     void modify(TodoDto dto);
 
     void remove(Long tno);
+
+    PageResponseDTO<TodoDto> getList(PageRequestDTO pageRequestDTO);
 
     default TodoDto entityToDTO(Todo todo){
         TodoDto todoDto = TodoDto.builder()
