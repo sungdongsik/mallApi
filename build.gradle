@@ -46,6 +46,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	implementation 'net.coobird:thumbnailator:0.4.19'
 
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
 
