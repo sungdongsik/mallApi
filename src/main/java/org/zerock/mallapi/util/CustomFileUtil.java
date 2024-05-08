@@ -109,7 +109,6 @@ public class CustomFileUtil {
 
         fileNames.forEach(fileName ->{
             //썸네일 삭제
-
             String thumbnameFileName = "s_" + fileName;
 
             Path thumbnailPath = Paths.get(upload, thumbnameFileName);
