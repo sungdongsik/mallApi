@@ -8,6 +8,8 @@ import org.zerock.mallapi.dto.PageRequestDTO;
 import org.zerock.mallapi.dto.PageResponseDTO;
 import org.zerock.mallapi.dto.ProductDTO;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -30,4 +32,22 @@ class ProductServiceTest {
 
     }
 
+
+    @Test
+    public void testRegister(){
+        ProductDTO productDTO = ProductDTO.builder()
+                .pname("이름")
+                .pdesc("신규")
+                .price(1000)
+                .build();
+
+        productDTO.setUploadFileNames(
+                java.util.List.of(
+                        UUID.randomUUID() + "_" + "Test1.jpg",
+                        UUID.randomUUID() + "_" + "Test2.jpg"
+                )
+        );
+
+        productService.register(productDTO);
+    }
 }
