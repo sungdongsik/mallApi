@@ -14,6 +14,7 @@ import org.zerock.mallapi.util.CustomFileUtil;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
@@ -71,6 +72,50 @@ public class ProductController {
     @GetMapping("/{pno}")
     public ProductDTO read(@PathVariable("pno") Long pno){
         return productService.get(pno);
+    }
+
+
+    @PutMapping("/{pno}")
+    public Map<String, String> modify(@PathVariable Long pno, ProductDTO productDTO){
+
+        productDTO.setPno(pno);
+
+        ProductDTO oldProductDTO = productService.get(pno);
+
+        List<MultipartFile> files = productDTO.getFiles();
+        List<String> currentUploadFileNames = customFileUtil.saveFiles(files);
+
+        //업로드 저장
+        List<String> uploadedFileNames = productDTO.getUploadFileNames();
+
+        if(currentUploadFileNames != null && !currentUploadFileNames.isEmpty()){
+            uploadedFileNames.addAll(currentUploadFileNames);
+        }
+
+        productService.modify(productDTO);
+
+        List<String> oldFileNames = oldProductDTO.getUploadFileNames();
+
+        if(oldFileNames != null && oldFileNames.size() > 0){
+            List<String> removeFiles =
+            oldFileNames.stream().filter(fileName -> uploadedFileNames.indexOf(fileName) == -1).collect(Collectors.toList());
+            customFileUtil.deleteFiles(removeFiles);
+        }
+
+        //기존 저장되고 데이터베이스에 존재
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    @DeleteMapping("/{pno}")
+    public Map<String, String> remove(@PathVariable Long pno){
+        List<String> oldFileNames = productService.get(pno).getUploadFileNames();
+
+        productService.remove(pno);
+
+        customFileUtil.deleteFiles(oldFileNames);
+
+        return Map.of("RESULT", "SUCCESS");
     }
 }
 
